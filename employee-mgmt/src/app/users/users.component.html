@@ -4,10 +4,81 @@
     <h3>Employees List</h3>
   </div>
   <div class="col-4 text-right p-2">
-    <button class="btn btn-primary btn-sm" (click)="addEmployee()">Add</button>
+    <button class="btn btn-primary btn-sm" (click)="openAddModal(empTemplate)">Add</button>
   </div>
 </div>
 
-<app-table [empList]="employeeList" (onEdit)="onEdit($event)" (onDelete)="onDelete($event)"></app-table>
+<app-table [empList]="employeeList" (onEdit)="openEditModal($event, empTemplate)" (onDelete)="onDelete($event)">
+</app-table>
 
 <app-table [empList]="deletedEmployeeList" [showRestore]="true" (onRestore)="onRestore($event)"></app-table>
+
+<ng-template #empTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">
+      <span *ngIf="isAddOperation">Add Employee</span>
+      <span *ngIf="!isAddOperation">Edit Employee</span>
+    </h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="empForm">
+      <div class="row mb-3">
+        <div class="col-3"><label for="name">Name: </label></div>
+        <div class="col-9">
+          <input id="name" type="text" formControlName="name">
+          <span class="error-msg"
+            *ngIf="empForm.controls['name']?.errors?.required && empForm.controls['name']?.dirty">Name is
+            required.</span>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-3"><label for="company">Company: </label></div>
+        <div class="col-9">
+          <input id="company" type="text" formControlName="company">
+          <span class="error-msg"
+            *ngIf="empForm.controls['company']?.errors?.required && empForm.controls['company']?.dirty">Company is
+            required.</span>
+        </div>
+      </div>
+      <div formGroupName="address">
+        <div class="row mb-3">
+          <div class="col-3"><label for="street">Street: </label></div>
+          <div class="col-9">
+            <input id="street" type="text" formControlName="street">
+            <span class="error-msg"
+              *ngIf="empForm.controls['street']?.errors?.required && empForm.controls['street']?.dirty">Street is
+              required.</span>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-3"><label for="suite">Suite: </label></div>
+          <div class="col-9">
+            <input id="suite" type="text" formControlName="suite">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-3"><label for="city">City: </label></div>
+          <div class="col-9">
+            <input id="city" type="text" formControlName="city">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-3"><label for="zipcode">Zip code: </label></div>
+          <div class="col-9">
+            <input id="zipcode" type="text" formControlName="zipcode">
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-sm" (click)="modalRef.hide()">Close</button>
+    <button *ngIf="isAddOperation" type="button" class="btn btn-primary btn-sm" [disabled]="empForm.invalid"
+      (click)="addEmployee()">Add</button>
+    <button *ngIf="!isAddOperation" type="button" class="btn btn-primary btn-sm" [disabled]="empForm.invalid"
+      (click)="editEmployee()">Edit</button>
+  </div>
+</ng-template>
