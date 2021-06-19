@@ -1,0 +1,45 @@
+<div class="full-width p-3">
+  <div class="row mb-2">
+    <div class="col-2">
+      <input type="text" (keyup)="searchEmployee($event, 'name')" placeholder="Search by Name">
+    </div>
+    <div class="col-2">
+      <input type="text" (keyup)="searchEmployee($event, 'address')" placeholder="Search by Address">
+    </div>
+    <div class="col-2">
+      <input type="text" (keyup)="searchEmployee($event, 'company')" placeholder="Search by Company">
+    </div>
+  </div>
+
+  <span style="color: red;">Note: Click on the column name to sort.</span>
+  <table class="full-width table table-striped table-bordered">
+    <tr>
+      <th class="show-pointer" (click)="sortEmployees('name')">
+        Name
+        <span *ngIf="isSorted && sortColumnName == 'name'"><i class="fa fa-angle-double-up"></i></span>
+        <span *ngIf="!isSorted && sortColumnName == 'name'"><i class="fa fa-angle-double-down"></i></span>
+      </th>
+      <th class="show-pointer" (click)="sortEmployees('address.street')">
+        Address
+        <span *ngIf="isSorted && sortColumnName == 'address.street'"><i class="fa fa-angle-double-up"></i></span>
+        <span *ngIf="!isSorted && sortColumnName == 'address.street'"><i class="fa fa-angle-double-down"></i></span>
+      </th>
+      <th class="show-pointer" (click)="sortEmployees('company')">
+        Company
+        <span *ngIf="isSorted && sortColumnName == 'company'"><i class="fa fa-angle-double-up"></i></span>
+        <span *ngIf="!isSorted && sortColumnName == 'company'"><i class="fa fa-angle-double-down"></i></span>
+      </th>
+      <th>Actions</th>
+    </tr>
+    <tr *ngFor="let item of employeeList; let i = index">
+      <td>{{item?.name}}</td>
+      <td>{{item?.address?.street}} {{item?.address?.suite}} {{item?.address?.city}} {{item?.address?.zipcode}}</td>
+      <td>{{item?.company}}</td>
+      <td class="edit-link">
+        <button *ngIf="!showRestore" class="btn btn-primary btn-sm mr-2" type="button" (click)="edit(item)">Edit</button>
+        <button *ngIf="!showRestore" class="btn btn-primary btn-sm mr-2" type="button" (click)="remove(item)">Delete</button>
+        <button *ngIf="showRestore" class="btn btn-primary btn-sm" type="button" (click)="restore(item)">Restore</button>
+      </td>
+    </tr>
+  </table>
+</div>
